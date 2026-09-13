@@ -1,8 +1,19 @@
+import importlib
+import os
+
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse, StreamingResponse
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # 1. Define the allowed origins (websites) that can connect to your API
 origins = ["*"]
@@ -17,6 +28,17 @@ app.add_middleware(
 )
 
 from my import get_info_basic
+
+
+@app.get("/customers")
+async def list_customers():
+    customers_dir = os.path.join(os.path.dirname(__file__), "customers")
+    customers = []
+    for entry in sorted(os.scandir(customers_dir), key=lambda e: e.name):
+        if entry.is_dir() and not entry.name.startswith("_"):
+            module = importlib.import_module(f"customers.{entry.name}.about")
+            customers.append({"id": entry.name, "name": module.name})
+    return customers
 
 
 @app.get("/chat")

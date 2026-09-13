@@ -4,7 +4,7 @@ from typing import AsyncIterator
 from langchain.tools import tool
 from langchain_core.messages import BaseMessage
 from langchain_ollama import ChatOllama
-from langchain.messages import AIMessage, HumanMessage, SystemMessage
+from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 
 from models.company import CompanyData
 from utils.get_evn import load_env
@@ -14,7 +14,7 @@ from utils.md_loader import load_markdown
 @tool
 def company_info(company_id: str) -> CompanyData:
     """
-    Get company information about the company using its id and return name and context. If user ask question about any company use this to get company information.
+    Get company information about the company using its id and return name and context. If user ask question about any company use this to get company information. Limit your answer strictly to 60 words
     """
     print(f"Getting info about {company_id}")
     data = load_markdown(f"customers/{company_id}/data.md")
@@ -30,6 +30,7 @@ model = load_env("MODEL")
 llm = ChatOllama(
     model=model,
     temperature=0,
+    # reasoning="low"
 )
 
 instructions = load_markdown("instructions/System.md")
