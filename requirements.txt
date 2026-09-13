@@ -1,0 +1,5 @@
+openai-agents
+dotenv
+langchain-ollama
+langchain
+langchain_core
