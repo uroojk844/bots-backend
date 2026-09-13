@@ -1,7 +1,21 @@
 from fastapi import FastAPI
 from fastapi.responses import HTMLResponse, StreamingResponse
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+
+# 1. Define the allowed origins (websites) that can connect to your API
+origins = ["*"]
+
+# 2. Add the CORS middleware to your application
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=['*'],  # Allows requests from specific domains
+    allow_credentials=True,  # Allows cookies and authentication
+    allow_methods=["*"],  # Allows all HTTP methods (GET, POST, PUT,
+    allow_headers=["*"],  # Allows all HTTP headers
+)
+
 from my import get_info_basic
 
 
