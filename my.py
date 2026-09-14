@@ -39,6 +39,11 @@ messages: list[BaseMessage] = [SystemMessage(content=instructions)]
 company = dict()
 current = ""
 
+def load_company_info(company_id: str) -> CompanyData:
+    print(f"Getting info about {company_id}")
+    company.get(company_id, company_info.invoke({"company_id": company_id}))
+    return company_id
+
 
 async def get_info_basic(query: str, company_id: str) -> AsyncIterator[str]:
     global current

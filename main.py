@@ -1,3 +1,4 @@
+from my import load_company_info
 import importlib
 import os
 
@@ -8,12 +9,6 @@ from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
 
 # 1. Define the allowed origins (websites) that can connect to your API
 origins = ["*"]
@@ -21,7 +16,7 @@ origins = ["*"]
 # 2. Add the CORS middleware to your application
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=['*'],  # Allows requests from specific domains
+    allow_origins=origins,  # Allows requests from specific domains
     allow_credentials=True,  # Allows cookies and authentication
     allow_methods=["*"],  # Allows all HTTP methods (GET, POST, PUT,
     allow_headers=["*"],  # Allows all HTTP headers
@@ -40,6 +35,10 @@ async def list_customers():
             customers.append({"id": entry.name, "name": module.name})
     return customers
 
+
+@app.get("/init")
+async def read_root(company_id: str):
+    return load_company_info(company_id)
 
 @app.get("/chat")
 async def read_root(company_id: str, query: str):
